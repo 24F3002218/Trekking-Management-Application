@@ -26,7 +26,12 @@ class Trek(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     assigned_staff = db.relationship("User", back_populates="assigned_treks")
-    bookings = db.relationship("Booking", back_populates="trek", lazy="dynamic")
+    bookings = db.relationship(
+        "Booking",
+        back_populates="trek",
+        lazy="dynamic",
+        cascade="all, delete-orphan",
+    )
 
     @property
     def booked_count(self):
