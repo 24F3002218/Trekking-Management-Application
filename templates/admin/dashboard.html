@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+{% block page_title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>Admin Dashboard</h2>
+    <p class="text-muted mb-0">Overview of trekking operations</p>
+</div>
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card treks p-3">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="bi bi-signpost-split"></i></div>
+                <div><h3 class="mb-0">{{ stats.total_treks }}</h3><small class="text-muted">Total Treks</small></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card users p-3">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="bi bi-person"></i></div>
+                <div><h3 class="mb-0">{{ stats.total_users }}</h3><small class="text-muted">Trekkers</small></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card staff p-3">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="bi bi-person-badge"></i></div>
+                <div><h3 class="mb-0">{{ stats.total_staff }}</h3><small class="text-muted">Staff</small></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card bookings p-3">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="bi bi-calendar-check"></i></div>
+                <div><h3 class="mb-0">{{ stats.total_bookings }}</h3><small class="text-muted">Active Bookings</small></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Recent Bookings</h5></div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead><tr><th>ID</th><th>User</th><th>Trek</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody>
+                    {% for b in recent_bookings %}
+                        <tr>
+                            <td>{{ b.id }}</td>
+                            <td>{{ b.user.name }}</td>
+                            <td>{{ b.trek.name }}</td>
+                            <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+                            <td><span class="badge bg-secondary">{{ b.status }}</span></td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" class="text-center text-muted">No bookings yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Quick Stats Chart</h5></div>
+            <div class="card-body">
+                <canvas id="statsChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('statsChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Treks', 'Users', 'Staff', 'Bookings'],
+        datasets: [{
+            data: [{{ stats.total_treks }}, {{ stats.total_users }}, {{ stats.total_staff }}, {{ stats.total_bookings }}],
+            backgroundColor: ['#2d6a4f', '#0d6efd', '#ffc107', '#dc3545']
+        }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+});
+</script>
+{% endblock %}

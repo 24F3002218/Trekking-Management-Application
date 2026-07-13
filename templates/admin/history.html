@@ -1,0 +1,49 @@
+{% extends "admin/base.html" %}
+{% block page_title %}Trekking History{% endblock %}
+{% block content %}
+<div class="page-header"><h2>Historical Trekking Data</h2></div>
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Completed Treks</h5></div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead><tr><th>Trek</th><th>Location</th><th>Completed</th></tr></thead>
+                    <tbody>
+                    {% for t in completed_treks %}
+                        <tr>
+                            <td>{{ t.name }}</td>
+                            <td>{{ t.location }}</td>
+                            <td>{{ t.completed_at.strftime('%d %b %Y') if t.completed_at else '—' }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="3" class="text-muted text-center">No completed treks</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Completed Bookings</h5></div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead><tr><th>User</th><th>Trek</th><th>Date</th></tr></thead>
+                    <tbody>
+                    {% for b in completed_bookings %}
+                        <tr>
+                            <td>{{ b.user.name }}</td>
+                            <td>{{ b.trek.name }}</td>
+                            <td>{{ b.booking_date.strftime('%d %b %Y') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="3" class="text-muted text-center">No completed bookings</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

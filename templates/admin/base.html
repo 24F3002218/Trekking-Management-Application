@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block sidebar %}
+<a href="{{ url_for('admin.dashboard') }}" class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> Dashboard
+</a>
+<a href="{{ url_for('admin.treks') }}" class="nav-link {% if request.endpoint and 'admin.trek' in request.endpoint or request.endpoint == 'admin.treks' %}active{% endif %}">
+    <i class="bi bi-signpost-split"></i> Manage Treks
+</a>
+<a href="{{ url_for('admin.manage_staff') }}" class="nav-link {% if request.endpoint and 'admin.' in request.endpoint and 'staff' in request.endpoint %}active{% endif %}">
+    <i class="bi bi-people"></i> Manage Staff
+</a>
+<a href="{{ url_for('admin.users') }}" class="nav-link {% if request.endpoint == 'admin.users' %}active{% endif %}">
+    <i class="bi bi-person-lines-fill"></i> Users
+</a>
+<a href="{{ url_for('admin.bookings') }}" class="nav-link {% if request.endpoint == 'admin.bookings' %}active{% endif %}">
+    <i class="bi bi-calendar-check"></i> Bookings
+</a>
+<a href="{{ url_for('admin.history') }}" class="nav-link {% if request.endpoint == 'admin.history' %}active{% endif %}">
+    <i class="bi bi-clock-history"></i> History
+</a>
+{% endblock %}

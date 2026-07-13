@@ -1,0 +1,58 @@
+{% extends "admin/base.html" %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ title }}</h2>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.location.label(class="form-label") }}
+                    {{ form.location(class="form-control") }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.difficulty.label(class="form-label") }}
+                    {{ form.difficulty(class="form-select") }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.duration_days.label(class="form-label") }}
+                    {{ form.duration_days(class="form-control") }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.max_slots.label(class="form-label") }}
+                    {{ form.max_slots(class="form-control") }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.start_date.label(class="form-label") }}
+                    {{ form.start_date(class="form-control", type="date") }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.end_date.label(class="form-label") }}
+                    {{ form.end_date(class="form-control", type="date") }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.status.label(class="form-label") }}
+                    {{ form.status(class="form-select") }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.assigned_staff_id.label(class="form-label") }}
+                    {{ form.assigned_staff_id(class="form-select") }}
+                </div>
+                <div class="col-12 mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control", rows=4) }}
+                </div>
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('admin.treks') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

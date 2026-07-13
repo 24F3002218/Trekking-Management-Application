@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% block page_title %}Users{% endblock %}
+{% block content %}
+<div class="page-header"><h2>All Users (Trekkers)</h2></div>
+<form class="row g-2 mb-4" method="GET">
+    <div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="Search by name or ID..." value="{{ search }}"></div>
+    <div class="col-auto"><button class="btn btn-outline-primary" type="submit">Search</button></div>
+</form>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.phone or '—' }}</td>
+                <td>{% if u.is_blacklisted %}<span class="badge bg-danger">Blacklisted</span>{% else %}<span class="badge bg-success">Active</span>{% endif %}</td>
+                <td>
+                    {% if u.is_blacklisted %}
+                    <form method="POST" action="{{ url_for('admin.unblacklist_user', user_id=u.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-success">Restore</button>
+                    </form>
+                    {% else %}
+                    <form method="POST" action="{{ url_for('admin.blacklist_user', user_id=u.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-warning">Blacklist</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6" class="text-center text-muted">No users found</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

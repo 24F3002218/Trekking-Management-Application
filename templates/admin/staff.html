@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% block page_title %}Manage Staff{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>Manage Staff</h2>
+</div>
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item"><a class="nav-link {% if tab == 'pending' %}active{% endif %}" href="{{ url_for('admin.manage_staff', tab='pending') }}">Pending</a></li>
+    <li class="nav-item"><a class="nav-link {% if tab == 'approved' %}active{% endif %}" href="{{ url_for('admin.manage_staff', tab='approved') }}">Approved</a></li>
+    <li class="nav-item"><a class="nav-link {% if tab == 'blacklisted' %}active{% endif %}" href="{{ url_for('admin.manage_staff', tab='blacklisted') }}">Blacklisted</a></li>
+</ul>
+<form class="row g-2 mb-4" method="GET">
+    <input type="hidden" name="tab" value="{{ tab }}">
+    <div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="Search by name or ID..." value="{{ search }}"></div>
+    <div class="col-auto"><button class="btn btn-outline-primary" type="submit">Search</button></div>
+</form>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Experience</th><th>Specialization</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+        {% for p in profiles %}
+            <tr>
+                <td>{{ p.user.id }}</td>
+                <td>{{ p.user.name }}</td>
+                <td>{{ p.user.email }}</td>
+                <td>{{ p.contact or '—' }}</td>
+                <td>{{ p.experience_years }} yrs</td>
+                <td>{{ p.specialization or '—' }}</td>
+                <td>
+                    {% if tab == 'pending' %}
+                    <form method="POST" action="{{ url_for('admin.approve_staff', profile_id=p.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-success">Approve</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('admin.reject_staff', profile_id=p.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-danger">Reject</button>
+                    </form>
+                    {% elif tab == 'approved' %}
+                    <form method="POST" action="{{ url_for('admin.blacklist_staff', profile_id=p.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-warning">Blacklist</button>
+                    </form>
+                    {% elif tab == 'blacklisted' %}
+                    <form method="POST" action="{{ url_for('admin.unblacklist_staff', profile_id=p.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-sm btn-success">Restore</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="7" class="text-center text-muted">No staff in this category</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
