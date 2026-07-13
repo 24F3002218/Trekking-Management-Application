@@ -1,0 +1,57 @@
+{% extends "user/base.html" %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>Welcome, {{ current_user.name }}!</h2>
+    <p class="text-muted mb-0">Discover treks and manage your bookings</p>
+</div>
+<div class="row">
+    <div class="col-lg-7 mb-4">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Available Open Treks</h5>
+                <a href="{{ url_for('user.treks') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                {% for trek in open_treks %}
+                    <div class="col-md-6">
+                        <div class="card trek-card h-100">
+                            <div class="card-body">
+                                <h6>{{ trek.name }}</h6>
+                                <p class="small text-muted mb-1">{{ trek.location }}</p>
+                                <span class="badge badge-difficulty-{{ trek.difficulty }}">{{ trek.difficulty }}</span>
+                                <span class="badge bg-success">{{ trek.available_slots }} slots</span>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('user.trek_detail', trek_id=trek.id) }}" class="btn btn-sm btn-primary">View & Book</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No open treks at the moment.</p>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <h5 class="mb-0">My Recent Bookings</h5>
+                <a href="{{ url_for('user.my_bookings') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <ul class="list-group list-group-flush">
+            {% for b in my_bookings %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ b.trek.name }}</span>
+                    <span class="badge bg-secondary">{{ b.status }}</span>
+                </li>
+            {% else %}
+                <li class="list-group-item text-muted">No bookings yet</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

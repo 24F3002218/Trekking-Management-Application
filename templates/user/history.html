@@ -1,0 +1,37 @@
+{% extends "user/base.html" %}
+{% block page_title %}Trekking History{% endblock %}
+{% block content %}
+<div class="page-header"><h2>Trekking History</h2></div>
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Completed Treks</h5></div>
+            <ul class="list-group list-group-flush">
+            {% for b in completed %}
+                <li class="list-group-item">
+                    <strong>{{ b.trek.name }}</strong> — {{ b.trek.location }}
+                    <br><small class="text-muted">{{ b.booking_date.strftime('%d %b %Y') }}</small>
+                </li>
+            {% else %}
+                <li class="list-group-item text-muted">No completed treks yet</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Cancelled Bookings</h5></div>
+            <ul class="list-group list-group-flush">
+            {% for b in cancelled %}
+                <li class="list-group-item">
+                    <strong>{{ b.trek.name }}</strong> — {{ b.trek.location }}
+                    <br><small class="text-muted">{{ b.booking_date.strftime('%d %b %Y') }}</small>
+                </li>
+            {% else %}
+                <li class="list-group-item text-muted">No cancelled bookings</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
