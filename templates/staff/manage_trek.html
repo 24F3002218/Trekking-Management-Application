@@ -1,0 +1,79 @@
+{% extends "staff/base.html" %}
+{% block page_title %}Manage Trek{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h2>{{ trek.name }}</h2>
+    <p class="text-muted mb-0">{{ trek.location }} · {{ trek.difficulty }} · {{ trek.duration_days }} days</p>
+</div>
+<div class="row">
+    <div class="col-lg-5 mb-4">
+        <div class="card">
+            <div class="card-header bg-white"><h5 class="mb-0">Update Trek</h5></div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.available_slots.label(class="form-label") }}
+                        {{ form.available_slots(class="form-control") }}
+                        <small class="text-muted">Max: {{ trek.max_slots }}, Booked: {{ trek.booked_count }}</small>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.status.label(class="form-label") }}
+                        {{ form.status(class="form-select") }}
+                    </div>
+                    {{ form.submit(class="btn btn-primary") }}
+                </form>
+                <hr>
+                <p><strong>Current Status:</strong> {{ trek.status }}</p>
+                {% if trek.started_at %}<p><strong>Started:</strong> {{ trek.started_at.strftime('%d %b %Y %H:%M') }}</p>{% endif %}
+                {% if trek.completed_at %}<p><strong>Completed:</strong> {{ trek.completed_at.strftime('%d %b %Y %H:%M') }}</p>{% endif %}
+                <div class="d-flex gap-2 flex-wrap">
+                    {% if trek.status == 'Open' and not trek.started_at %}
+                    <form method="POST" action="{{ url_for('staff.start_trek', trek_id=trek.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-warning">Mark Started</button>
+                    </form>
+                    {% endif %}
+                    {% if trek.started_at and trek.status != 'Completed' %}
+                    <form method="POST" action="{{ url_for('staff.complete_trek', trek_id=trek.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button class="btn btn-success">Mark Completed</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6>Description</h6>
+                <p class="mb-0">{{ trek.description or 'No description provided.' }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <h5 class="mb-0">Participants ({{ participants|length }})</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Booked On</th></tr></thead>
+                    <tbody>
+                    {% for p in participants %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ p.user.name }}</td>
+                            <td>{{ p.user.email }}</td>
+                            <td>{{ p.user.phone or '—' }}</td>
+                            <td>{{ p.booking_date.strftime('%d %b %Y') }}</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" class="text-center text-muted">No participants yet</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

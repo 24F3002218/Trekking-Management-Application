@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block sidebar %}
+<a href="{{ url_for('staff.dashboard') }}" class="nav-link {% if request.endpoint == 'staff.dashboard' %}active{% endif %}">
+    <i class="bi bi-speedometer2"></i> Dashboard
+</a>
+<a href="{{ url_for('staff.treks') }}" class="nav-link {% if request.endpoint and 'staff.trek' in request.endpoint or request.endpoint == 'staff.treks' %}active{% endif %}">
+    <i class="bi bi-signpost-split"></i> My Treks
+</a>
+{% endblock %}
