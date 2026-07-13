@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Trekking Management Application API
+  description: API resources for retrieving open treks, managing bookings, and viewing users list.
+  version: 1.0.0
+paths:
+  /api/treks:
+    get:
+      summary: Retrieve all open treks
+      description: Returns a list of all trekking routes that are currently marked with status 'Open'.
+      responses:
+        '200':
+          description: A JSON array of treks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trek'
+  /api/treks/{id}:
+    get:
+      summary: Retrieve details of a specific trek
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detailed JSON object representing the trek.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrekDetail'
+        '404':
+          description: Trek not found.
+  /api/bookings:
+    get:
+      summary: Fetch booking records
+      description: Returns all bookings if logged in as admin, or only the logged-in user's bookings if logged in as a trekker.
+      responses:
+        '200':
+          description: A list of bookings.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '401':
+          description: Unauthorized. Session cookie is missing or invalid.
+  /api/users:
+    get:
+      summary: Fetch user directory
+      description: Returns a complete list of registered users. Restricted to Admin role only.
+      responses:
+        '200':
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized.
+        '403':
+          description: Forbidden. Current user is not an Admin.
+
+components:
+  schemas:
+    Trek:
+      type: object
+      properties:
+        trek_id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        difficulty:
+          type: string
+          enum: [Easy, Moderate, Hard]
+        duration:
+          type: integer
+        available_slots:
+          type: integer
+        total_slots:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        description:
+          type: string
+    TrekDetail:
+      allOf:
+        - $ref: '#/components/schemas/Trek'
+        - type: object
+          properties:
+            status:
+              type: string
+            assigned_staff_id:
+              type: integer
+              nullable: true
+    Booking:
+      type: object
+      properties:
+        booking_id:
+          type: integer
+        user_id:
+          type: integer
+        user_name:
+          type: string
+        trek_id:
+          type: integer
+        trek_name:
+          type: string
+        booking_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [Booked, Cancelled, Completed]
+    User:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [admin, staff, user]
+        contact:
+          type: string
+        status:
+          type: string
+          enum: [pending, active, blacklisted]
