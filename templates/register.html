@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Register | Trek Management{% endblock %}
+{% block body %}
+<div class="auth-wrapper py-4">
+    <div class="card auth-card">
+        <div class="card-header">
+            <h3 class="mb-0">Create Account</h3>
+            <p class="mb-0 mt-1 opacity-75">Register as Trekker or Trek Staff</p>
+        </div>
+        <div class="card-body p-4">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label") }}
+                    {{ form.email(class="form-control") }}
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control") }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.confirm_password.label(class="form-label") }}
+                        {{ form.confirm_password(class="form-control") }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form.role.label(class="form-label") }}
+                    {{ form.role(class="form-select") }}
+                </div>
+                <div class="mb-3">
+                    {{ form.phone.label(class="form-label") }}
+                    {{ form.phone(class="form-control") }}
+                </div>
+                <div id="staff-fields" style="display:none;">
+                    <div class="mb-3">
+                        {{ form.contact.label(class="form-label") }}
+                        {{ form.contact(class="form-control") }}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.experience_years.label(class="form-label") }}
+                            {{ form.experience_years(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.specialization.label(class="form-label") }}
+                            {{ form.specialization(class="form-control") }}
+                        </div>
+                    </div>
+                </div>
+                {{ form.submit(class="btn btn-primary w-100") }}
+            </form>
+            <hr>
+            <p class="text-center mb-0">Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
+        </div>
+    </div>
+</div>
+<script>
+document.getElementById('role').addEventListener('change', function() {
+    document.getElementById('staff-fields').style.display = this.value === 'staff' ? 'block' : 'none';
+});
+document.getElementById('role').dispatchEvent(new Event('change'));
+</script>
+{% endblock %}
